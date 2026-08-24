@@ -133,18 +133,18 @@ const sortProduct = () => {
 
             <p className="flex gap-2">
               <input
-                className="w-3"type="checkbox" value="Men"onChange={toggleCateg}/>
+                className="w-3 cursor-pointer "type="checkbox" value="Men"onChange={toggleCateg}/>
               Men
             </p>
 
             <p className="flex gap-2">
               <input
-                className="w-3"type="checkbox"value="Women"onChange={toggleCateg}/>
+                className="w-3 cursor-pointer"type="checkbox"value="Women"onChange={toggleCateg}/>
               Women</p>
 
             <p className="flex gap-2">
               <input
-                className="w-3"type="checkbox"value="Kids"onChange={toggleCateg}/>
+                className="w-3 cursor-pointer"type="checkbox"value="Kids"onChange={toggleCateg}/>
               Kids</p>
 
           </div>
@@ -164,7 +164,7 @@ const sortProduct = () => {
 
             <p className="flex gap-2">
               <input
-                className="w-3"
+                className="w-3 cursor-pointer"
                 type="checkbox"
                 value="Topwear"
                 onChange={toggleSubCateg}
@@ -174,7 +174,7 @@ const sortProduct = () => {
 
             <p className="flex gap-2">
               <input
-                className="w-3"
+                className="w-3 cursor-pointer"
                 type="checkbox"
                 value="Bottomwear"
                 onChange={toggleSubCateg}
@@ -184,7 +184,7 @@ const sortProduct = () => {
 
             <p className="flex gap-2">
               <input
-                className="w-3"
+                className="w-3 cursor-pointer"
                 type="checkbox"
                 value="Winterwear"
                 onChange={toggleSubCateg}

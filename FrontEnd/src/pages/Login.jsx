@@ -11,10 +11,14 @@ const Login = () => {
   const[password,setPassword]=useState('')
   const[email,setEmail]=useState('')
 
+  const [loading,setLoading]=useState(false)
+
   const onsubmitHandler=async(event)=>{
     event.preventDefault()
 
     try {
+        setLoading(true)
+
       if (currrenState === 'Sign Up') {
         const response= await axios.post(backendUrl + '/api/user/register',{name,email,password})
 
@@ -44,7 +48,10 @@ const Login = () => {
     }catch (error) {
       console.log(error)
       toast.error(error.response?.data?.message || error.message)
-    }
+
+    }finally {
+  setLoading(false)
+}
   }
   useEffect(()=>{
     if (token) {
@@ -105,9 +112,20 @@ const Login = () => {
 
         </div>
 
-        <button className="bg-black text-white font-light px-8 py-2 mt-4">
-          {currrenState === 'Login' ? 'Sign In' : 'Sign Up'}
-        </button>
+        <button
+  type="submit"
+  disabled={loading}
+  className="bg-black cursor-pointer text-white font-light px-8 py-2 mt-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {loading
+    ? 'Loading...'
+    : currrenState === 'Login'
+      ? 'Sign In'
+      : 'Sign Up'
+  }
+</button>
+
+        
 
       </form>
     </div>

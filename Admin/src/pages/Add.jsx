@@ -20,10 +20,15 @@ const Add = ({token}) => {
   const [bestseller, setBestseller] = useState(false)
   const[sizes,setSize]=useState([])
 
+  // add marka uu adminka add dhaho qofka si uu markle add udhhihin  ayan u isticmale
+  const [loading, setLoading] = useState(false)
+
   const onsubmitHandle = async (e) => {
   e.preventDefault();
 
   try {
+        setLoading(true);  // NEW loading
+
     const formData = new FormData();
 
     formData.append("name", name);
@@ -60,33 +65,36 @@ const Add = ({token}) => {
     console.log(error);
     toast.error(error.message)
   }
+  //loading// add u nooqna xita hadu error dhaco
+   finally {
+    setLoading(false);  
 };
 
-
+  }
 
   return (
     <form onSubmit={onsubmitHandle} className='flex flex-col w-full items-start gap-3'>
       <div>
         <p className='mb-2'>Upload Image</p>
-        <div className='flex gap-2'>
+        <div className='flex gap-2 '>
           <label htmlFor="image1">
-            <img className='w-20' src={! image1?assets.upload_area:URL.createObjectURL(image1)} alt="" />
+            <img className='w-20 cursor-pointer' src={! image1?assets.upload_area:URL.createObjectURL(image1)} alt="" />
             <input onChange={(e)=>setImage1(e.target.files[0])} type="file" id='image1' hidden />
           </label>
 
           <label htmlFor="image2">
-            <img className='w-20' src={! image2?assets.upload_area:URL.createObjectURL(image2)} alt="" />
+            <img className='w-20 cursor-pointer' src={! image2?assets.upload_area:URL.createObjectURL(image2)} alt="" />
             <input onChange={(e)=>setImage2(e.target.files[0])}  type="file" id='image2' hidden />
           </label>
 
           <label htmlFor="image3">
-            <img className='w-20' src={!image3?assets.upload_area:URL.createObjectURL(image3)} alt="" />
+            <img className='w-20 cursor-pointer' src={!image3?assets.upload_area:URL.createObjectURL(image3)} alt="" />
 
             <input onChange={(e)=>setImage3(e.target.files[0])}  type="file" id='image3' hidden />
           </label>
 
           <label htmlFor="image4">
-                        <img className='w-20' src={!image4?assets.upload_area:URL.createObjectURL(image4)} alt="" />
+                        <img className='w-20 cursor-pointer' src={!image4?assets.upload_area:URL.createObjectURL(image4)} alt="" />
 
             <input onChange={(e)=>setImage4(e.target.files[0])}  type="file" id='image4' hidden />
           </label>
@@ -110,7 +118,7 @@ const Add = ({token}) => {
       <div>
         
         <p className='mb-2'>Product Category</p>
-        <select onChange={(e)=>setCateg(e.target.value)}value={categ} className='w-full px-3 py-2' >
+        <select onChange={(e)=>setCateg(e.target.value)}value={categ} className='w-full px-3 py-2 cursor-pointer' >
           <option value="Men">men</option>
           <option value="Women">Women</option>
           <option value="Kids">Kids</option>
@@ -121,8 +129,8 @@ const Add = ({token}) => {
        <div>
 
         <p className='mb-2'>Sub Category</p>
-        <select onChange={(e)=>setSubcateg(e.target.value)} value={subCateg} className='w-full px-3 py-2' >
-          <option value="Topwear">Topwear </option>
+        <select onChange={(e)=>setSubcateg(e.target.value)} value={subCateg} className='w-full cursor-pointer px-3 py-2' >
+          <option  value="Topwear">Topwear </option>
           <option value="BottomWear">BottomWear</option>
           <option value="WinterWear">WinterWear</option>
         </select>
@@ -130,7 +138,7 @@ const Add = ({token}) => {
       </div>
       <div>
         <p className='mb-2'>product price</p>
-      <input onChange={(e)=>setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type="Number"placeholder='25' />
+      <input onChange={(e)=>setPrice(e.target.value)} value={price} className='w-full px-3 py-2 cursor-pointer sm:w-[120px]' type="Number"placeholder='25' />
       </div>
 
 
@@ -162,23 +170,26 @@ const Add = ({token}) => {
         <label className='cursor-pointer' htmlFor="bestseller">Add to bestsaller</label>
       </div> */}
       <div className='flex gap-2 mt-2'>
-  <input
+  <input className="cursor-pointer"
     onChange={(e) => setBestseller(e.target.checked)}
     checked={bestseller}
     type="checkbox"
     id="bestseller"
   />
 
-  <label
-    className='cursor-pointer'
-    htmlFor="bestseller"
-  >
+  <label className="cursor-pointer"
+    htmlFor="bestseller">
     Add to bestseller
   </label>
 </div>
 
-      <button type='submit' className='w-28 py-2 mt-4 bg-black text-white'>ADD</button>
-
+<button
+  type='submit'
+  disabled={loading}
+  className='w-28 py-2 mt-4 cursor-pointer bg-black text-white disabled:opacity-50 disabled:cursor-not-allowed'
+>
+  {loading ? "Adding..." : "ADD"}
+</button>
 
       
     </form>

@@ -9,6 +9,10 @@ const Cart = () => {
 
   const[CartData,setCartData]=useState([]);
 
+  const [loading, setLoading] = useState(false);
+
+  
+
   useEffect(() => {
     if (products.length > 0) {
     const tempData = [];
@@ -29,6 +33,23 @@ const Cart = () => {
   }
 }, [cartItems,products]);
 
+const handleCheckout = () => {
+  setLoading(true);
+
+  setTimeout(() => {
+    navigate('/place-order');
+  }, 700);
+};
+
+const handleRemove = (id, size) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to remove this item from your cart?"
+  );
+
+  if (confirmDelete) {
+    updateQuentity(id, size, 0);
+  }
+};
  
 
   return (
@@ -62,7 +83,10 @@ const Cart = () => {
                   onChange={(e)=>e.target.value==='' || e.target.value==='0' ? null :updateQuentity(item._id,item.size,Number(e.target.value))} 
                   className="max-w-10 border sm:max-w-20 px-1 sm:px-2 py-1" type="number"
                       min={1} defaultValue={item.quantity} />
-                      <img onClick={()=>updateQuentity(item._id ,item.size,0)} className="mr-4 cursor-pointer w-4  sm:w-5" src={assets.bin_icon} alt="" />
+                      {/* with out conform action// */}
+                      {/* <img onClick={()=>updateQuentity(item._id ,item.size,0)} className="mr-4 cursor-pointer w-4  sm:w-5" src={assets.bin_icon} alt="" /> */}
+                          <img onClick={() => handleRemove(item._id, item.size)} className="mr-4 cursor-pointer w-4  sm:w-5" src={assets.bin_icon} alt="" />
+
 
               </div>
             )
@@ -74,7 +98,15 @@ const Cart = () => {
         <div className="w-full sm:w-[450px]">
           <CartToltal/>
           <div className="w-full text-end">
-            <button onClick={()=> navigate('/place-order')} className="bg-black text-white text-sm my-8 px-8 py-3">PRROCEED TO CHECK OUT</button>
+
+                    <button
+                          type="button"
+                          onClick={handleCheckout}
+                          disabled={loading}
+                          className="bg-black cursor-pointer text-white text-sm my-8 px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {loading ? "Processing..." : "PROCEED TO CHECK OUT"}
+        </button>
 
           </div>
 

@@ -74,7 +74,7 @@ const Orders = () => {
                 <p className="text-sm md:text-base ">{item.status}</p>
               </div>
               {/* when load data update the status */}
-              <button onClick={loadOrderDate} className="border px-4 py-2 text-sm font-medium rounded-sm">Track Oder</button>
+              <button onClick={loadOrderDate} className="border cursor-pointer px-4 py-2 text-sm font-medium rounded-sm">Track Oder</button>
 
               </div>
 

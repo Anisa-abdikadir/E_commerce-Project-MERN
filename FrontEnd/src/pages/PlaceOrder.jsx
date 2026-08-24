@@ -7,6 +7,8 @@ import axios from "axios"
 import { toast } from "react-toastify"
 const PlaceOrder = () => {
   const[method,setmethod]=useState('cod');
+
+  const [loading, setLoading] = useState(false);
     const{navigate,backendUrl, token, cartItems, setCartItem, getCartAmount, delivery_fee, products}=useContext(ShopContext);
 
 
@@ -37,17 +39,11 @@ const PlaceOrder = () => {
   const options = {
 
     key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-
     amount: order.amount,
-
     currency: order.currency,
-
     name: "Order Payment",
-
     description: "Order Payment",
-
     order_id: order.id,
-
     handler: async (response) => {
 
       console.log("RAZORPAY PAYMENT:", response);
@@ -91,6 +87,8 @@ const PlaceOrder = () => {
   const onSubmitHandler =async(event)=>{
     event.preventDefault()
     try {
+          setLoading(true);
+
 
       let orderItems =[]
 
@@ -173,9 +171,11 @@ const PlaceOrder = () => {
       toast.error(error.message)
       
     }
+    finally {
+  setLoading(false);
 
   }
-
+  }
 
   return (
     <form onSubmit={onSubmitHandler} className="flex flex-col sm:flex-row  justify-between gap-4  pt-5  sm:pt-14 min-h-[80vh]
@@ -237,7 +237,14 @@ const PlaceOrder = () => {
           </div>
 
           <div className="w-full text-end mt-8">
-            <button type="submit" className="bg-black text-white px-16 py-3 text-sm">PLACE ORDER</button>
+
+            <button
+  type="submit"
+  disabled={loading}
+  className="bg-black cursor-pointer text-white px-16 py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {loading ? "Loading..." : "PLACE ORDER"}
+</button>
 
           </div>
 

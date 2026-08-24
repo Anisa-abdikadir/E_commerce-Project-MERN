@@ -6,7 +6,7 @@ const Navbar = ({setToken}) => {
     <div className='flex items-center justify-between py-2 px-[4%]'>
         <img src={assets.logo} alt="" className='w-[max(10%,80px)]' />
         <button onClick={()=>setToken('')} className='bg-gray-600 text-white px-5 sm:px-7 sm:py-2 rounded-full
-        sm:text-sm text-xs'  >Logout</button>
+        sm:text-sm text-xs cursor-pointer'  >Logout</button>
       
     </div>
   )

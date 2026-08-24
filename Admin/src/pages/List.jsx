@@ -35,6 +35,15 @@ const List = ({ token }) => {
 
   const removeProduct = async(id)=>{
 
+    //conform action before deleting the product
+     const confirmAction = window.confirm(
+    "Are you sure you want to delete this product?"
+  );
+
+  if (!confirmAction) {
+    return;
+  }
+
     try {
           const response = await axios.post(backendUrl + '/api/product/remove',{id},{headers:{token}})
           if (response.data.success) {
