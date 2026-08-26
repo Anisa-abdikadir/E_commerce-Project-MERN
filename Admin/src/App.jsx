@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Navbar from './Components/Navbar'
 import Sidebar from './Components/Sidebar'
 import { Routes, Route } from 'react-router-dom'
-
 import Add from './pages/Add'
 import List from "./pages/List";
 import Orders from './pages/Orders'
 import Login from './Components/Login'
   import { ToastContainer } from 'react-toastify';
-
+import ProductDetails from './pages/ProductDetails'
 
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL
@@ -38,6 +37,18 @@ const App = () => {
             <Route path='/add' element={<Add token={token}  />} />
             <Route path='/List' element={<List token={token} />} />
             <Route path='/Orders' element={<Orders token={token} />} />
+
+            <Route
+  path="/product/:id"
+  element={<ProductDetails token={token} />}
+/>
+
+
+
+<Route
+  path="/update/:id"
+  element={<Add token={token} />}
+/>
           </Routes>
 
         </div>

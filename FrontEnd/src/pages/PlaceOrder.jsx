@@ -238,13 +238,7 @@ const PlaceOrder = () => {
 
           <div className="w-full text-end mt-8">
 
-            <button
-  type="submit"
-  disabled={loading}
-  className="bg-black cursor-pointer text-white px-16 py-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
->
-  {loading ? "Loading..." : "PLACE ORDER"}
-</button>
+            <button disabled={loading} className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-all duration-300">{loading?'Loading...':'PLACE ORDER'}</button>
 
           </div>
 

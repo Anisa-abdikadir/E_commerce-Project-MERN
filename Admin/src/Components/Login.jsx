@@ -8,10 +8,14 @@ const Login = ({ setToken }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const [loading, setLoading] = useState(false) // KU DAR HALKAN
+
     const onsubmitHandle = async (e) => {
         e.preventDefault()
 
         try {
+
+                setLoading(true) 
 
             const response = await axios.post(
                 backendUrl + '/api/user/admin',
@@ -32,6 +36,10 @@ const Login = ({ setToken }) => {
             console.log(error)
             toast.error(error.message)
 
+        }
+        finally {
+
+    setLoading(false)
         }
     }
 
@@ -83,8 +91,9 @@ const Login = ({ setToken }) => {
                     <button
                         className='mt-2 w-full cursor-pointer px-4 py-2 rounded-md text-white bg-black'
                         type='submit'
+                        disabled={loading}
                     >
-                        Login
+                        {loading ? 'Logging in...' : 'Login'}
                     </button>
 
                 </form>

@@ -54,32 +54,7 @@ const AddProduct = async (req, res) => {
     const product =new ProductModel(productData);
     await product.save();
 
-    // console.log("Product Data:");
-    // console.log({
-    //   name,
-    //   description,
-    //   price,
-    //   category,
-    //   subCategory,
-    //   sizes,
-    //   bestseller,
-    // });
-
-    // console.log("Image URLs:", imageURL);
-
-    // res.json({
-    //   success: true,
-    //   data: {
-    //     name,
-    //     description,
-    //     price,
-    //     category,
-    //     subCategory,
-    //     sizes,
-    //     bestseller,
-    //     images: imageURL,
-    //   },
-    // });
+   
     res.json({success:true,message:"product added"})
 
   } catch (error) {
@@ -122,21 +97,139 @@ const removeProduct = async (req, res) => {
 };
 
 
+// const singleProduct = async (req, res) => {
+
+//     // only admin delete
+//     try {
+//         const{productId}=req.body
+//         const product = await productModel.findById(productId)
+//         res.json({success:true,product})
+        
+//     } catch (error) {
+//          console.log(error)
+//                 res.json({success:false,message:error.message})
+        
+//     }
+  
+// };
 const singleProduct = async (req, res) => {
 
-    // only admin delete
     try {
-        const{productId}=req.body
-        const product = await productModel.findById(productId)
-        res.json({success:true,product})
-        
+
+        const { id } = req.params
+
+        const product = await productModel.findById(id)
+
+        if (!product) {
+            return res.json({
+                success: false,
+                message: "Product not found"
+            })
+        }
+
+        res.json({
+            success: true,
+            product
+        })
+
     } catch (error) {
-         console.log(error)
-                res.json({success:false,message:error.message})
-        
+
+        console.log(error)
+
+        res.json({
+            success: false,
+            message: error.message
+        })
+
     }
-  
+}
+
+
+//upadte product
+const updateProduct = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const {
+      name,
+      description,
+      price,
+      category,
+      subCategory,
+      sizes,
+      bestseller
+    } = req.body;
+
+    const product = await productModel.findById(id);
+
+    if (!product) {
+      return res.json({
+        success: false,
+        message: "Product not found"
+      });
+    }
+
+    // Images cusub haddii admin soo geliyo
+    const image1 = req.files?.image1?.[0];
+    const image2 = req.files?.image2?.[0];
+    const image3 = req.files?.image3?.[0];
+    const image4 = req.files?.image4?.[0];
+
+    const newImages = [
+      image1,
+      image2,
+      image3,
+      image4
+    ].filter(Boolean);
+
+    let imageURL = product.image;
+
+    // Haddii images cusub la soo geliyo
+    if (newImages.length > 0) {
+
+      const uploadedImages = await Promise.all(
+        newImages.map(async (item) => {
+
+          const result = await imagekit.upload({
+            file: fs.readFileSync(item.path),
+            fileName: item.originalname,
+          });
+
+          return result.url;
+        })
+      );
+
+      imageURL = uploadedImages;
+    }
+
+    product.name = name;
+    product.description = description;
+    product.price = Number(price);
+    product.category = category;
+    product.subCategory = subCategory;
+    product.sizes = JSON.parse(sizes);
+    product.bestseller = bestseller === "true";
+    product.image = imageURL;
+
+    await product.save();
+
+    res.json({
+      success: true,
+      message: "Product updated successfully"
+    });
+
+  } catch (error) {
+
+    console.log("Update Product Error:", error);
+
+    res.json({
+      success: false,
+      message: error.message
+    });
+  }
 };
+
 
 // 
 
@@ -145,4 +238,6 @@ export {
   ListProduct,
   removeProduct,
   singleProduct,
+  updateProduct
+
 };
