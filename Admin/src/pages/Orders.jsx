@@ -118,7 +118,7 @@ const Orders = ({ token }) => {
       </p>
 
 
-      {/* ================= LOADING ================= */}
+      {/* LOADING */}
 
       {loading && (
 
@@ -170,7 +170,6 @@ const Orders = ({ token }) => {
               </div>
 
 
-              {/* Order information */}
 
               <div className='space-y-3'>
 
@@ -203,7 +202,7 @@ const Orders = ({ token }) => {
       )}
 
 
-      {/* ================= ERROR ================= */}
+    {/* ERROR */}
 
       {!loading && error && (
 
@@ -228,9 +227,7 @@ const Orders = ({ token }) => {
 
       )}
 
-
-      {/* ================= EMPTY ================= */}
-
+{/* //empty */}
       {!loading &&
         !error &&
         orders.length === 0 && (
@@ -250,7 +247,7 @@ const Orders = ({ token }) => {
         )}
 
 
-      {/* ================= ORDERS LIST ================= */}
+      {/*  ORDERS LIST*/}
 
       {!loading &&
         !error &&

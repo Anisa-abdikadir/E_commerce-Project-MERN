@@ -201,7 +201,22 @@ const PlaceOrder = () => {
           <input required onChange={onChangeHandler} name="zipcode" value={formData.zipcode} className="border border-gray-300 rounded py-1.5 px-3.5 w-full" type="Number" placeholder="Zipcode" />
                     <input required onChange={onChangeHandler} name="country" value={formData.country} className="border border-gray-300 rounded py-1.5 px-3.5 w-full" type="text" placeholder="Country" />
         </div>
-          <input required onChange={onChangeHandler} name="phone" value={formData.phone} className="border border-gray-300 rounded py-1.5 px-3.5 w-full" type="Nubart " placeholder="Phone" />
+
+        <input
+  required
+  onChange={(e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setFormData(data => ({ ...data, phone: value }));
+  }}
+  name="phone"
+  value={formData.phone}
+  className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+  type="tel"
+  inputMode="numeric"
+  pattern="[0-9]*"
+  maxLength={15}
+  placeholder="Phone"
+/>
 
       </div>
 

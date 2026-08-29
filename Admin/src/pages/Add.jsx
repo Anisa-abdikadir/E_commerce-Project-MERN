@@ -8,11 +8,10 @@ import { useNavigate, useParams } from "react-router-dom"
 
 const Add = ({ token }) => {
 
-  // URL ID
-
   const { id } = useParams()
   const navigate = useNavigate()
 
+  // UPDATE haddii id jiro
   const isEdit = Boolean(id)
 
 
@@ -23,7 +22,6 @@ const Add = ({ token }) => {
   const [image3, setImage3] = useState(false)
   const [image4, setImage4] = useState(false)
 
-  // Old images from database
   const [oldImages, setOldImages] = useState([])
 
 
@@ -32,50 +30,30 @@ const Add = ({ token }) => {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
-
   const [categ, setCateg] = useState("")
   const [subCateg, setSubcateg] = useState("")
-
   const [bestseller, setBestseller] = useState(false)
   const [sizes, setSize] = useState([])
 
 
   // LOADING
 
-  // Page first loading
-  const [pageLoading, setPageLoading] = useState(true)
-
-  // Product fetch loading when Edit
+  // Kaliya product-ka update mode lagu fetch-gareynayo
   const [fetchLoading, setFetchLoading] = useState(false)
 
-  // ADD / UPDATE loading
+  // Add / Update submit
   const [loading, setLoading] = useState(false)
 
   // Size error
   const [sizeError, setSizeError] = useState(false)
 
 
-  // PAGE LOADING
-  // 
-
-  useEffect(() => {
-
-    const timer = setTimeout(() => {
-
-      setPageLoading(false)
-
-    }, 700)
-
-    return () => clearTimeout(timer)
-
-  }, [])
-
-
   // FETCH PRODUCT FOR UPDATE
-  // 
 
   useEffect(() => {
 
+    // Haddii /Add yahay
+    // waxba ha fetch-gareyn
     if (!id) return
 
     const fetchProduct = async () => {
@@ -85,32 +63,64 @@ const Add = ({ token }) => {
         setFetchLoading(true)
 
         const response = await axios.get(
-          backendUrl + `/api/product/single/${id}`
+          backendUrl + `/api/product/single/${id}`,
+          {
+            headers: {
+              token: token
+            }
+          }
         )
 
         if (response.data.success) {
 
           const product = response.data.product
 
-          setName(product.name || "")
 
-          setDescription(product.description || "")
+          setName(
+            product.name || ""
+          )
 
-          setPrice(product.price || "")
 
-          setCateg(product.category || "")
+          setDescription(
+            product.description || ""
+          )
 
-          setSubcateg(product.subCategory || "")
 
-          setSize(product.sizes || [])
+          setPrice(
+            product.price || ""
+          )
 
-          setBestseller(product.bestseller || false)
 
-          setOldImages(product.image || [])
+          setCateg(
+            product.category || ""
+          )
+
+
+          setSubcateg(
+            product.subCategory || ""
+          )
+
+
+          setSize(
+            product.sizes || []
+          )
+
+
+          setBestseller(
+            product.bestseller || false
+          )
+
+
+          setOldImages(
+            product.image || []
+          )
 
         } else {
 
-          toast.error(response.data.message)
+          toast.error(
+            response.data.message ||
+            "Product not found"
+          )
 
         }
 
@@ -131,23 +141,20 @@ const Add = ({ token }) => {
 
     }
 
+
     fetchProduct()
 
-  }, [id])
+  }, [id, token])
 
 
   // SUBMIT ADD / UPDATE
-  // 
 
   const onsubmitHandle = async (e) => {
 
     e.preventDefault()
 
 
-    // IMAGE REQUIRED
-    // 
-
-    // Image is required only when adding a new product
+    // ADD ONLY IMAGE REQUIRED
 
     if (
       !isEdit &&
@@ -162,11 +169,11 @@ const Add = ({ token }) => {
       )
 
       return
+
     }
 
 
-    // SIZE REQUIRED
-  
+    // SIZE VALIDATION
 
     if (sizes.length === 0) {
 
@@ -177,48 +184,57 @@ const Add = ({ token }) => {
       )
 
       return
+
     }
 
     setSizeError(false)
 
 
-    // START LOADING
-
     try {
 
       setLoading(true)
 
+
       const formData = new FormData()
-      // product data
+
+
+      // PRODUCT DATA
+
       formData.append(
         "name",
         name
       )
+
 
       formData.append(
         "description",
         description
       )
 
+
       formData.append(
         "price",
         price
       )
+
 
       formData.append(
         "category",
         categ
       )
 
+
       formData.append(
         "subCategory",
         subCateg
       )
 
+
       formData.append(
         "bestseller",
         bestseller
       )
+
 
       formData.append(
         "sizes",
@@ -226,7 +242,8 @@ const Add = ({ token }) => {
       )
 
 
-    //  new image
+      // NEW IMAGES
+
       if (image1) {
 
         formData.append(
@@ -235,6 +252,7 @@ const Add = ({ token }) => {
         )
 
       }
+
 
       if (image2) {
 
@@ -245,6 +263,7 @@ const Add = ({ token }) => {
 
       }
 
+
       if (image3) {
 
         formData.append(
@@ -253,6 +272,7 @@ const Add = ({ token }) => {
         )
 
       }
+
 
       if (image4) {
 
@@ -264,29 +284,16 @@ const Add = ({ token }) => {
       }
 
 
-      // ADD OR UPDATE
+      // UPDATE
 
       let response
+
+
       if (isEdit) {
 
-        // UPDATE
-
         response = await axios.put(
-          backendUrl + `/api/product/update/${id}`,
-          formData,
-          {
-            headers: {
-              token: token
-            }
-          }
-        )
-
-      } else {
-
-        // ADD
-
-        response = await axios.post(
-          backendUrl + "/api/product/add",
+          backendUrl +
+          `/api/product/update/${id}`,
           formData,
           {
             headers: {
@@ -296,36 +303,66 @@ const Add = ({ token }) => {
         )
 
       }
+
+      // ADD
+
+      else {
+
+        response = await axios.post(
+          backendUrl +
+          "/api/product/add",
+          formData,
+          {
+            headers: {
+              token: token
+            }
+          }
+        )
+
+      }
+
+
+      // RESPONSE
+
       if (response.data.success) {
 
         toast.success(
           response.data.message
         )
 
-        // succ update
+
+        // UPDATE SUCCESS
+
         if (isEdit) {
 
-          navigate("/List")
+          // Update kadib Add page caadi ah
+          navigate("/Add")
 
           return
 
         }
-        // succ add
+
+
+        // =================================================
+        // ADD SUCCESS
+        // =================================================
+
         setName("")
 
         setDescription("")
 
+        setPrice("")
+
+        setCateg("")
+
+        setSubcateg("")
+
         setImage1(false)
-
         setImage2(false)
-
         setImage3(false)
-
         setImage4(false)
 
         setOldImages([])
-
-        setPrice("")
 
         setSize([])
 
@@ -333,15 +370,11 @@ const Add = ({ token }) => {
 
         setBestseller(false)
 
-        setCateg("")
-
-        setSubcateg("")
-
-
       } else {
 
         toast.error(
-          response.data.message
+          response.data.message ||
+          "Something went wrong"
         )
 
       }
@@ -352,7 +385,8 @@ const Add = ({ token }) => {
 
       toast.error(
         error.response?.data?.message ||
-        error.message
+        error.message ||
+        "Something went wrong"
       )
 
     } finally {
@@ -364,139 +398,8 @@ const Add = ({ token }) => {
   }
 
 
-  // skleaton loading page
-  if (
-    pageLoading ||
-    (isEdit && fetchLoading)
-  ) {
-
-    return (
-
-      <div className="flex flex-col w-full items-start gap-5 animate-pulse">
-      <div className="h-6 w-40 bg-gray-200 rounded"></div>
-
-        <div>
-
-          <div className="h-4 w-28 bg-gray-200 rounded mb-3"></div>
-
-          <div className="flex gap-2">
-
-            <div className="w-20 h-20 bg-gray-200 rounded"></div>
-
-            <div className="w-20 h-20 bg-gray-200 rounded"></div>
-
-            <div className="w-20 h-20 bg-gray-200 rounded"></div>
-
-            <div className="w-20 h-20 bg-gray-200 rounded"></div>
-
-          </div>
-
-        </div>
-
-
-            {/* PRODUCT NAME */}
-
-        <div className="w-full">
-
-          <div className="h-4 w-32 bg-gray-200 rounded mb-2"></div>
-
-          <div className="h-10 w-full max-w-[500px] bg-gray-200 rounded"></div>
-
-        </div>
-
-
-            {/* DESCRIPTION */}
-
-        <div className="w-full">
-
-          <div className="h-4 w-40 bg-gray-200 rounded mb-2"></div>
-
-          <div className="h-24 w-full max-w-[500px] bg-gray-200 rounded"></div>
-
-        </div>
-
-
-
-        <div className="flex flex-col sm:flex-row gap-8 w-full">
-
-
-          {/* CATEGORY */}
-
-          <div>
-
-            <div className="h-4 w-32 bg-gray-200 rounded mb-2"></div>
-
-            <div className="h-10 w-40 bg-gray-200 rounded"></div>
-
-          </div>
-
-
-          {/* SUB CATEGORY */}
-
-          <div>
-
-            <div className="h-4 w-28 bg-gray-200 rounded mb-2"></div>
-
-            <div className="h-10 w-40 bg-gray-200 rounded"></div>
-
-          </div>
-
-
-          {/* PRICE */}
-
-          <div>
-
-            <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
-
-            <div className="h-10 w-32 bg-gray-200 rounded"></div>
-
-          </div>
-
-        </div>
-
-    {/* size     */}
-        <div>
-
-          <div className="h-4 w-16 bg-gray-200 rounded mb-2"></div>
-
-          <div className="flex gap-3">
-
-            <div className="h-8 w-10 bg-gray-200 rounded"></div>
-
-            <div className="h-8 w-10 bg-gray-200 rounded"></div>
-
-            <div className="h-8 w-10 bg-gray-200 rounded"></div>
-
-            <div className="h-8 w-10 bg-gray-200 rounded"></div>
-
-            <div className="h-8 w-10 bg-gray-200 rounded"></div>
-
-          </div>
-
-        </div>
-
-
-            {/* BESTSELLER */}
-
-        <div className="flex gap-2 mt-2">
-
-          <div className="h-4 w-4 bg-gray-200 rounded"></div>
-
-          <div className="h-4 w-32 bg-gray-200 rounded"></div>
-
-        </div>
-
-
-            BUTTON
-
-        <div className="h-10 w-28 bg-gray-200 rounded mt-2"></div>
-
-      </div>
-
-    )
-
-  }     //end loading skle
-
+  // FORM
+  // 
 
   return (
 
@@ -505,9 +408,30 @@ const Add = ({ token }) => {
       className="flex flex-col w-full items-start gap-3"
     >
 
+
+          {/* TITLE */}
+
+      <h2 className="text-xl font-semibold mb-2">
+
+        {isEdit
+          ? "Update Product"
+          : "Add Product"
+        }
+
+      </h2>
+
+
+      {/* =================================================
+          IMAGE
+      ================================================= */}
+
       <div>
 
-        <p className="mb-2">Upload Image</p>
+        <p className="mb-2">
+          Upload Image
+        </p>
+
+
         <div className="flex gap-2">
 
 
@@ -526,9 +450,12 @@ const Add = ({ token }) => {
               alt=""
             />
 
+
             <input
               onChange={(e) =>
-                setImage1(e.target.files[0])
+                setImage1(
+                  e.target.files[0]
+                )
               }
               type="file"
               id="image1"
@@ -553,9 +480,12 @@ const Add = ({ token }) => {
               alt=""
             />
 
+
             <input
               onChange={(e) =>
-                setImage2(e.target.files[0])
+                setImage2(
+                  e.target.files[0]
+                )
               }
               type="file"
               id="image2"
@@ -580,9 +510,12 @@ const Add = ({ token }) => {
               alt=""
             />
 
+
             <input
               onChange={(e) =>
-                setImage3(e.target.files[0])
+                setImage3(
+                  e.target.files[0]
+                )
               }
               type="file"
               id="image3"
@@ -607,9 +540,12 @@ const Add = ({ token }) => {
               alt=""
             />
 
+
             <input
               onChange={(e) =>
-                setImage4(e.target.files[0])
+                setImage4(
+                  e.target.files[0]
+                )
               }
               type="file"
               id="image4"
@@ -623,13 +559,20 @@ const Add = ({ token }) => {
       </div>
 
 
+          {/* PRODUCT NAME */}
+
       <div className="w-full">
 
-        <p className="mb-2"> Product name </p>
+        <p className="mb-2">
+          Product name
+        </p>
+
 
         <input
           onChange={(e) =>
-            setName(e.target.value)
+            setName(
+              e.target.value
+            )
           }
           value={name}
           className="w-full max-w-[500px] px-3 py-2"
@@ -640,17 +583,21 @@ const Add = ({ token }) => {
 
       </div>
 
+
+          {/* DESCRIPTION */}
+
       <div className="w-full">
 
         <p className="mb-2">
-
           Product description
-
         </p>
+
 
         <textarea
           onChange={(e) =>
-            setDescription(e.target.value)
+            setDescription(
+              e.target.value
+            )
           }
           value={description}
           className="w-full max-w-[500px] px-3 py-2"
@@ -660,6 +607,9 @@ const Add = ({ token }) => {
 
       </div>
 
+
+          {/* CATEGORY + SUBCATEGORY + PRICE */}
+
       <div className="flex flex-col sm:flex-row gap-2 w-full sm:gap-8">
 
 
@@ -668,14 +618,15 @@ const Add = ({ token }) => {
         <div>
 
           <p className="mb-2">
-
             Product Category
-
           </p>
+
 
           <select
             onChange={(e) =>
-              setCateg(e.target.value)
+              setCateg(
+                e.target.value
+              )
             }
             value={categ}
             className="w-full px-3 py-2 cursor-pointer"
@@ -683,40 +634,40 @@ const Add = ({ token }) => {
           >
 
             <option value="">
-
               Select Category
-
             </option>
 
             <option value="Men">
-
               Men
-
             </option>
 
             <option value="Women">
-
               Women
-
             </option>
 
             <option value="Kids">
-
               Kids
-
             </option>
 
           </select>
 
         </div>
 
+
+        {/* SUB CATEGORY */}
+
         <div>
 
-          <p className="mb-2"> Sub Category</p>
+          <p className="mb-2">
+            Sub Category
+          </p>
+
 
           <select
             onChange={(e) =>
-              setSubcateg(e.target.value)
+              setSubcateg(
+                e.target.value
+              )
             }
             value={subCateg}
             className="w-full cursor-pointer px-3 py-2"
@@ -724,27 +675,19 @@ const Add = ({ token }) => {
           >
 
             <option value="">
-
               Select Sub Category
-
             </option>
 
             <option value="Topwear">
-
               Topwear
-
             </option>
 
             <option value="BottomWear">
-
               BottomWear
-
             </option>
 
             <option value="WinterWear">
-
               WinterWear
-
             </option>
 
           </select>
@@ -757,14 +700,15 @@ const Add = ({ token }) => {
         <div>
 
           <p className="mb-2">
-
             Product price
-
           </p>
+
 
           <input
             onChange={(e) =>
-              setPrice(e.target.value)
+              setPrice(
+                e.target.value
+              )
             }
             value={price}
             className="w-full px-3 py-2 cursor-pointer sm:w-[120px]"
@@ -777,150 +721,67 @@ const Add = ({ token }) => {
 
       </div>
 
-{/* SIZE */}
+
+      {/* =================================================
+          SIZES
+      ================================================= */}
+
       <div>
 
-        <p>Sizes</p>
+        <p>
+          Sizes
+        </p>
+
+
         <div className="flex gap-3 mt-2">
 
-          <div
-            onClick={() => {
+          {[
+            "S",
+            "M",
+            "L",
+            "XL",
+            "XXL"
+          ].map((size) => (
 
-              setSize(prev =>
-                prev.includes("S")
-                  ? prev.filter(
-                      item => item !== "S"
-                    )
-                  : [...prev, "S"]
-              )
+            <div
+              key={size}
+              onClick={() => {
 
-              setSizeError(false)
+                setSize((prev) =>
+                  prev.includes(size)
+                    ? prev.filter(
+                        item =>
+                          item !== size
+                      )
+                    : [
+                        ...prev,
+                        size
+                      ]
+                )
 
-            }}>
+                setSizeError(false)
 
-            <p
-              className={`${
-                sizes.includes("S")
-                  ? "bg-pink-100"
-                  : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}>S</p>
+              }}
+            >
 
-          </div>
-
-
-          {/* M */}
-
-          <div
-            onClick={() => {
-
-              setSize(prev =>
-                prev.includes("M")
-                  ? prev.filter(
-                      item => item !== "M"
-                    )
-                  : [...prev, "M"]
-              )
-
-              setSizeError(false)
-
-            }}
-          >
-
-            <p
-              className={`${
-                sizes.includes("M")
-                  ? "bg-pink-100"
-                  : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}>
-                M
-            </p>
-
-          </div>
-
-          <div
-            onClick={() => {
-
-              setSize(prev =>
-                prev.includes("L")
-                  ? prev.filter(
-                      item => item !== "L"
-                    )
-                  : [...prev, "L"]
-              )
-
-              setSizeError(false)
-
-            }}>
-
-            <p
-              className={`${
-                sizes.includes("L")
-                  ? "bg-pink-100"
-                  : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}
-            >L</p>
-
-          </div>
-
-
-          {/* XL */}
-
-          <div
-            onClick={() => {
-
-              setSize(prev =>
-                prev.includes("XL")
-                  ? prev.filter(
-                      item => item !== "XL"
-                    )
-                  : [...prev, "XL"]
-              )
-
-              setSizeError(false)
-
-            }}>
               <p
-              className={`${
-                sizes.includes("XL")
-                  ? "bg-pink-100"
-                  : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}>
+                className={`${
+                  sizes.includes(size)
+                    ? "bg-pink-100"
+                    : "bg-slate-200"
+                } px-3 py-1 cursor-pointer`}
+              >
 
-              XL
+                {size}
 
-            </p>
+              </p>
 
-          </div>
+            </div>
 
-          <div
-            onClick={() => {
-
-              setSize(prev =>
-                prev.includes("XXL")
-                  ? prev.filter(
-                      item => item !== "XXL"
-                    )
-                  : [...prev, "XXL"]
-              )
-
-              setSizeError(false)
-
-            }}
-          >
-
-            <p
-              className={`${
-                sizes.includes("XXL")
-                  ? "bg-pink-100"
-                  : "bg-slate-200"
-              } px-3 py-1 cursor-pointer`}>
-              XXL
-
-            </p>
-
-          </div>
+          ))}
 
         </div>
+
 
         {sizeError && (
 
@@ -942,53 +803,48 @@ const Add = ({ token }) => {
         <input
           className="cursor-pointer"
           onChange={(e) =>
-            setBestseller(e.target.checked)
+            setBestseller(
+              e.target.checked
+            )
           }
           checked={bestseller}
           type="checkbox"
           id="bestseller"
         />
 
+
         <label
           className="cursor-pointer"
           htmlFor="bestseller"
         >
-
           Add to bestseller
-
         </label>
 
       </div>
 
 
-           {/* ADD / UPDATE BUTTON */}
+          {/* BUTTON */}
 
       <button
         type="submit"
-        disabled={loading}
-        className={`w-28 py-2 mt-4 bg-black text-white
-          ${
-            loading
-              ? "opacity-50 cursor-not-allowed"
-              : "cursor-pointer"
-          }
-        `}
+        disabled={loading || fetchLoading}
+        className={`w-28 py-2 mt-4 bg-black text-white ${
+          loading || fetchLoading
+            ? "opacity-50 cursor-not-allowed"
+            : "cursor-pointer"
+        }`}
       >
 
         {loading
-
           ? isEdit
             ? "Updating..."
             : "Adding..."
-
           : isEdit
             ? "UPDATE"
             : "ADD"
-
         }
 
       </button>
-
 
     </form>
 

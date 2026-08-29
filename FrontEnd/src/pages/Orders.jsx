@@ -10,9 +10,14 @@ const Orders = () => {
 
   const [orderData, setOrderData] = useState([])
 
+  const [loading, setLoading] = useState(true)
+
+
 
   const loadOrderDate = async()=>{
     try {
+          setLoading(true)
+
       if (!token) {
         return null
         
@@ -37,10 +42,57 @@ const Orders = () => {
       console.log(error)
       
     }
+    finally {
+  setLoading(false)
+}
   }
   useEffect(()=>{
     loadOrderDate()
   },[token])
+
+  if (loading) {
+  return (
+    <div className="flex flex-col md:flex-row gap-8 animate-pulse">
+
+      {/* Images Skeleton */}
+      <div className="flex-1">
+        <div className="w-full h-[400px] bg-gray-200 rounded"></div>
+
+        <div className="flex gap-3 mt-4">
+          <div className="w-20 h-20 bg-gray-200 rounded"></div>
+          <div className="w-20 h-20 bg-gray-200 rounded"></div>
+          <div className="w-20 h-20 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+
+      {/* Details Skeleton */}
+      <div className="flex-1 flex flex-col gap-4">
+
+        <div className="h-8 w-3/4 bg-gray-200 rounded"></div>
+
+        <div className="h-5 w-32 bg-gray-200 rounded"></div>
+
+        <div className="h-20 w-full bg-gray-200 rounded"></div>
+
+        <div className="h-6 w-24 bg-gray-200 rounded"></div>
+
+        {/* Size */}
+        <div className="flex gap-3">
+          <div className="h-10 w-12 bg-gray-200 rounded"></div>
+          <div className="h-10 w-12 bg-gray-200 rounded"></div>
+          <div className="h-10 w-12 bg-gray-200 rounded"></div>
+          <div className="h-10 w-12 bg-gray-200 rounded"></div>
+        </div>
+
+        {/* Button */}
+        <div className="h-12 w-40 bg-gray-200 rounded"></div>
+
+      </div>
+
+    </div>
+  )
+}
+
   return (
     <div className="border-t pt-16">
       <div className="text-2xl">

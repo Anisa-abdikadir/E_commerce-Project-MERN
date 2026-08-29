@@ -81,9 +81,7 @@ const List = ({ token }) => {
       </p>
 
 
-      {/* =====================================================
-          LOADING
-      ===================================================== */}
+          {/* LOADING */}
 
       {loading && (
 
@@ -124,18 +122,9 @@ const List = ({ token }) => {
 
               <div className='h-4 w-32 bg-gray-200 rounded animate-pulse'></div>
 
-
-              {/* CATEGORY */}
-
               <div className='h-4 w-20 bg-gray-200 rounded animate-pulse'></div>
 
-
-              {/* PRICE */}
-
               <div className='h-4 w-16 bg-gray-200 rounded animate-pulse'></div>
-
-
-              {/* SIZE */}
 
               <div className='h-4 w-24 bg-gray-200 rounded animate-pulse'></div>
 
@@ -148,9 +137,7 @@ const List = ({ token }) => {
       )}
 
 
-      {/* =====================================================
-          ERROR
-      ===================================================== */}
+          {/* ERROR */}
 
       {!loading && error && (
 
@@ -176,9 +163,7 @@ const List = ({ token }) => {
       )}
 
 
-      {/* =====================================================
-          EMPTY
-      ===================================================== */}
+          {/* EMPTY */}
 
       {!loading &&
         !error &&
@@ -199,9 +184,7 @@ const List = ({ token }) => {
         )}
 
 
-      {/* =====================================================
-          PRODUCT LIST
-      ===================================================== */}
+          {/* PRODUCT LIST */}
 
       {!loading &&
         !error &&
@@ -210,38 +193,24 @@ const List = ({ token }) => {
           <div className='flex flex-col gap-2'>
 
 
-            {/* =================================================
-                TABLE HEADER
-            ================================================= */}
+                {/* TABLE HEADER */}
 
             <div className='hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1.5fr] items-center py-1 px-2 border bg-gray-100 text-sm'>
 
-              <b>
-                Image
-              </b>
+              <b>Image</b>
 
-              <b>
-                Name
-              </b>
+              <b>Name</b>
 
-              <b>
-                Category
-              </b>
+              <b>Category</b>
 
-              <b>
-                Price
-              </b>
+              <b>Price</b>
 
-              <b>
-                Size
-              </b>
+              <b>Size</b>
 
             </div>
 
 
-            {/* =================================================
-                TABLE ROW
-            ================================================= */}
+                {/* TABLE ROW */}
 
             {list.map((item, index) => (
 
@@ -254,50 +223,24 @@ const List = ({ token }) => {
 
                 className='grid grid-cols-[1fr_3fr_1fr_1fr_1.5fr] items-center py-2 px-2 border text-sm cursor-pointer hover:bg-gray-100 transition'
               >
-
-
-                {/* =================================================
-                    IMAGE
-                ================================================= */}
-
+                    {/* IMAGE */}
                 <img
                   className='w-16 h-16 object-cover rounded'
                   src={item.image?.[0]}
                   alt={item.name}
                 />
-
-
-                {/* =================================================
-                    NAME
-                ================================================= */}
-
                 <p>
                   {item.name}
                 </p>
-
-
-                {/* =================================================
-                    CATEGORY
-                ================================================= */}
 
                 <p>
                   {item.category}
                 </p>
 
-
-                {/* =================================================
-                    PRICE
-                ================================================= */}
-
                 <p>
                   {currency}
                   {item.price}
                 </p>
-
-
-                {/* =================================================
-                    SIZE
-                ================================================= */}
 
                 <div className='flex flex-wrap gap-1'>
 
